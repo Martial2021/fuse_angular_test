@@ -1,26 +1,26 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
-import { AuthService } from 'app/core/auth/auth.service';
-import { of, switchMap } from 'rxjs';
+import { AuthService } from '@auth0/auth0-angular';
+import { map } from 'rxjs';
 
 export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (
     route,
     state
 ) => {
     const router: Router = inject(Router);
+    const auth: AuthService = inject(AuthService);
 
     // Check the authentication status
-    return inject(AuthService)
-        .check()
-        .pipe(
-            switchMap((authenticated) => {
-                // If the user is authenticated...
-                if (authenticated) {
-                    return of(router.parseUrl(''));
-                }
+    return auth.isAuthenticated$.pipe(
+        map((isAuthenticated) => {
+            // If the user is authenticated...
+            if (isAuthenticated) {
+                // Redirect to the root page
+                return router.parseUrl('/demandes');
+            }
 
-                // Allow the access
-                return of(true);
-            })
-        );
+            // Allow access to the sign-in page
+            return true;
+        })
+    );
 };

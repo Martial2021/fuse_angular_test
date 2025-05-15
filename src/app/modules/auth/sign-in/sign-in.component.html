@@ -1,17 +1,51 @@
-<!-- Connexion via Auth0 (remplace le formulaire) -->
-<div class="mt-8 space-y-6">
-    <p class="text-sm text-gray-600">
-        Pour accéder à l'application, cliquez sur le bouton ci-dessous pour vous connecter avec votre compte.
-        <br />
-        Si vous n'avez pas encore de compte, cliquez sur <strong>Sign up</strong> dans la page Auth0 qui s'affichera.
-    </p>
+<!-- Version 2 -->
+<div class="flex flex-col min-h-screen bg-gray-50 p-6">
+    <div class="flex-grow flex flex-col items-center justify-center">
+        <div class="text-center mb-8">
+            <img src="assets/images/logo/logo.svg" class="w-16 h-16 mx-auto mb-4" alt="Logo" />
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">Bienvenue</h1>
+            <p class="text-lg text-gray-600">Connectez-vous pour accéder à votre espace</p>
+        </div>
 
-    <button
-        class="fuse-mat-button-large w-full"
-        mat-flat-button
-        color="primary"
-        (click)="signInWithAuth0()"
-    >
-        Se connecter avec Auth0
-    </button>
+        <div class="w-full max-w-md bg-white rounded-lg shadow p-6">
+            <div class="bg-blue-50 rounded p-4 mb-6 flex items-start">
+                <mat-icon class="text-blue-600 mr-3">info</mat-icon>
+                <div class="text-sm text-gray-700">
+                    <p>Pour accéder à l'application, utilisez votre compte Auth0.</p>
+                    <p class="mt-1">Nouveau ? Cliquez sur <strong>Créer un compte</strong> ci-dessous.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4">
+                <button
+                    mat-flat-button
+                    color="primary"
+                    class="w-full"
+                    (click)="signInWithAuth0()"
+                >
+                    <div class="flex items-center justify-center">
+                        <mat-icon class="mr-2">login</mat-icon>
+                        <span>Se connecter avec Auth0</span>
+                    </div>
+                </button>
+
+                <button
+                    mat-stroked-button
+                    color="primary"
+                    class="w-full"
+                    (click)="signUpWithAuth0()"
+                >
+                    <div class="flex items-center justify-center">
+                        <mat-icon class="mr-2">person_add</mat-icon>
+                        <span>Créer un compte</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center text-sm text-gray-500 mt-8">
+        <p> {{ currentYear }} Tous droits réservés</p>
+    </footer>
 </div>
+

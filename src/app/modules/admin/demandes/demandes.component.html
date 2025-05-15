@@ -1,21 +1,94 @@
-<div class="p-8">
-    <h2 class="text-xl font-bold mb-4">Mes demandes</h2>
+<div class="flex justify-center min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 sm:p-6 md:p-8">
+    <div class="w-full max-w-6xl">
+        <!-- En-tête -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div class="flex items-center">
+                    <div class="bg-primary/10 p-3 rounded-lg mr-4">
+                        <mat-icon class="text-primary text-3xl">description</mat-icon>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900">Mes demandes</h2>
+                        <p class="text-sm text-gray-500 mt-1">Gérez vos demandes facilement</p>
+                    </div>
+                </div>
+                <div class="flex items-center bg-gray-100 px-4 py-2 rounded-lg">
+                    <mat-icon class="text-gray-500 mr-2">folder</mat-icon>
+                    <span class="text-sm font-medium">Total: {{ demandes?.length || 0 }}</span>
+                </div>
+            </div>
+        </div>
 
-    <div class="mb-4">
-        <input [(ngModel)]="content"
-               placeholder="Écrire une demande..."
-               class="border p-2 rounded w-full mb-2"/>
-        <button (click)="submit()" class="bg-blue-600 text-white px-4 py-2 rounded">
-            Ajouter
-        </button>
+        <!-- Formulaire de création -->
+        <div class="bg-white rounded-xl shadow-sm p-6 mb-6 transition-all duration-200 hover:shadow-md">
+            <div class="flex flex-col space-y-4">
+                <h3 class="text-lg font-semibold text-gray-900 mb-2">Nouvelle demande</h3>
+                <mat-form-field appearance="outline" class="w-full">
+                    <mat-label>Votre demande</mat-label>
+                    <textarea
+                        matInput
+                        [(ngModel)]="content"
+                        placeholder="Décrivez votre demande en détail..."
+                        rows="3"
+                        class="w-full resize-none text-gray-700"
+                    ></textarea>
+                    <mat-hint>Soyez aussi précis que possible</mat-hint>
+                </mat-form-field>
+                <div class="flex justify-end">
+                    <button
+                        mat-flat-button
+                        color="primary"
+                        (click)="submit()"
+                        [disabled]="!content"
+                        class="min-w-[140px] h-[46px]"
+                    >
+                        <mat-icon class="mr-2">send</mat-icon>
+                        <span>Soumettre</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Liste des demandes -->
+        <div class="space-y-6">
+            <!-- État vide -->
+            <div *ngIf="demandes?.length === 0" 
+                 class="bg-white rounded-xl shadow-sm p-12 text-center">
+                <mat-icon class="text-7xl text-gray-300 mb-4">inbox</mat-icon>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Aucune demande</h3>
+                <p class="text-gray-500">Commencez par créer votre première demande</p>
+            </div>
+
+            <!-- Liste des demandes -->
+            <div class="grid gap-6 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3" *ngIf="demandes?.length > 0">
+                <mat-card *ngFor="let d of demandes" 
+                          class="rounded-xl transition-all duration-200 hover:shadow-lg border border-gray-100">
+                    <mat-card-content class="p-6">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <p class="text-gray-900 whitespace-pre-line">{{ d.content }}</p>
+                            </div>
+                            <button mat-icon-button [matMenuTriggerFor]="menu" class="-mt-2 -mr-2">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-500 pt-4 border-t">
+                            <mat-icon class="text-sm mr-2">schedule</mat-icon>
+                            <span>{{ d.last_changed | date:'medium' }}</span>
+                        </div>
+                    </mat-card-content>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                            <mat-icon class="text-gray-500">edit</mat-icon>
+                            <span>Modifier</span>
+                        </button>
+                        <button mat-menu-item class="text-red-600">
+                            <mat-icon class="text-red-600">delete</mat-icon>
+                            <span>Supprimer</span>
+                        </button>
+                    </mat-menu>
+                </mat-card>
+            </div>
+        </div>
     </div>
-
-    <ul class="space-y-3">
-        <li *ngFor="let d of demandes" class="p-4 border rounded shadow-sm">
-            <p class="mb-1">{{ d.content }}</p>
-            <small class="text-gray-500">Modifiée le {{ d.last_changed | date:'short' }}</small>
-        </li>
-    </ul>
 </div>
-
-

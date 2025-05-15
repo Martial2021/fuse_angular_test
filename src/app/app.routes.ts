@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
+// import { AuthGuard } from 'app/core/auth/guards/auth.guard';
+import { Auth0Guard } from 'app/core/auth/guards/auth0.guard';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 
@@ -37,8 +38,8 @@ export const appRoutes: Route[] = [
     // Routes accessibles après authentification mais sans données (layout vide)
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [Auth0Guard],
+        canActivateChild: [Auth0Guard],
         component: LayoutComponent,
         data: {
             layout: 'empty'
@@ -64,8 +65,8 @@ export const appRoutes: Route[] = [
     // Routes principales authentifiées avec layout classique
     {
         path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
+        canActivate: [Auth0Guard],
+        canActivateChild: [Auth0Guard],
         component: LayoutComponent,
         data: {
             layout: 'classy'  

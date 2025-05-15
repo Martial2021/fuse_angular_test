@@ -6,8 +6,13 @@ import { cloneDeep } from 'lodash-es';
 export class DemandesMockApi {
     private _demandes: any[] = [
         {
-            user_id: 'demo-user-id',
+            user_id: 'any-user-id',
             content: 'Première demande mockée',
+            last_changed: new Date().toISOString()
+        },
+        {
+            user_id: 'any-user-id',
+            content: 'Deuxième demande mockée',
             last_changed: new Date().toISOString()
         }
     ];
@@ -17,14 +22,20 @@ export class DemandesMockApi {
     }
 
     registerHandlers(): void {
+        // GET handler
         this._fuseMockApiService
             .onGet('api/users/:id/demandes')
             .reply(({ request }) => {
                 const id = request.params.get('id');
-                const userDemandes = this._demandes.filter(d => d.user_id === id);
+                // Return all demandes for any user ID
+                const userDemandes = this._demandes.map(d => ({
+                    ...d,
+                    user_id: id
+                }));
                 return [200, cloneDeep(userDemandes)];
             });
 
+        // POST handler
         this._fuseMockApiService
             .onPost('api/users/:id/demandes')
             .reply(({ request }) => {

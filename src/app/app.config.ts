@@ -19,6 +19,7 @@ import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 
 import { provideAuth0 } from '@auth0/auth0-angular';
+import { UserService } from './core/user/user.service';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -90,7 +91,7 @@ export const appConfig: ApplicationConfig = {
         provideIcons(),
         provideFuse({
             mockApi: {
-                delay: 0,
+                delay: 250, // Add a small delay to ensure data is properly initialized
                 service: MockApiService,
             },
             fuse: {
