@@ -2,11 +2,12 @@ import {
     HttpErrorResponse,
     HttpEvent,
     HttpHandlerFn,
-    HttpRequest,
+    HttpRequest
 } from '@angular/common/http';
 import { inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
-import { Observable, catchError, mergeMap, throwError } from 'rxjs';
+import { catchError, mergeMap, Observable, throwError } from 'rxjs';
 
 /**
  * Intercept
@@ -19,6 +20,8 @@ export const authInterceptor = (
     next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
     const auth = inject(AuthService);
+
+    const router = inject(Router);
 
     // Get the Auth0 token
     return auth.getAccessTokenSilently().pipe(
@@ -33,8 +36,9 @@ export const authInterceptor = (
                 catchError((error) => {
                     // Catch "401 Unauthorized" responses
                     if (error instanceof HttpErrorResponse && error.status === 401) {
-                        // Sign out
+                        // Sign out and redirect to sign-in page
                         auth.logout();
+                        router.navigate(['/sign-in']);
                     }
 
                     return throwError(() => error);

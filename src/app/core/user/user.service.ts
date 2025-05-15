@@ -11,11 +11,7 @@ export class UserService {
     private _user: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor() {
-        // Initialize user data when authenticated
-        this._auth.isAuthenticated$.pipe(
-            filter(isAuthenticated => isAuthenticated === true),
-            switchMap(() => this.get())
-        ).subscribe();
+        // No initialization needed here, Auth0Service will set the user
     }
 
     /**

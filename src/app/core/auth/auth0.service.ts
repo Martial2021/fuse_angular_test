@@ -1,20 +1,26 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
-import { Observable, from, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
 import { UserService } from 'app/core/user/user.service';
+import { User } from 'app/core/user/user.types';
 
 @Injectable({ providedIn: 'root' })
 export class Auth0AuthService {
     private _authenticated: boolean = false;
 
     constructor(
-        private auth0: Auth0Service,
-        private _userService: UserService
+        private _auth: Auth0Service,
+        private _userService: UserService,
+        private _router: Router
     ) {
         // Subscribe to the authentication state changes
-        this.auth0.isAuthenticated$.subscribe((isAuthenticated) => {
+        this._auth.isAuthenticated$.subscribe((isAuthenticated) => {
             this._authenticated = isAuthenticated;
+            if (isAuthenticated) {
+                this.getUserProfile().subscribe();
+            }
         });
     }
 
@@ -23,41 +29,53 @@ export class Auth0AuthService {
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Sign in using Auth0
+     * Sign in
      */
-    signIn(): Observable<any> {
-        return from(this.auth0.loginWithRedirect());
+    signIn(): Observable<void> {
+        this._auth.loginWithRedirect();
+        return of(void 0);
     }
 
     /**
      * Sign out
      */
-    signOut(): Observable<any> {
-        return from(this.auth0.logout());
+    signOut(): Observable<void> {
+        this._auth.logout({ logoutParams: { returnTo: window.location.origin + '/sign-in' } });
+        return of(void 0);
     }
 
     /**
      * Check the authentication status
      */
     check(): Observable<boolean> {
-        return this.auth0.isAuthenticated$;
+        return this._auth.isAuthenticated$;
+    }
+
+    /**
+     * Get the user info
+     */
+    getUserInfo(): Observable<User> {
+        return this._auth.user$.pipe(
+            filter(user => !!user),
+            map((user: any) => ({
+                id: user.sub,
+                name: user.name,
+                email: user.email,
+                avatar: user.picture,
+                status: 'online'
+            })),
+            catchError((error) => throwError(() => error))
+        );
     }
 
     /**
      * Get the user profile
      */
-    getUserProfile(): Observable<any> {
-        return this.auth0.user$.pipe(
+    getUserProfile(): Observable<User> {
+        return this.getUserInfo().pipe(
             tap((user) => {
                 if (user) {
-                    // Store the user on the user service
-                    this._userService.user = {
-                        id: user.sub,
-                        name: user.name,
-                        email: user.email,
-                        avatar: user.picture,
-                        status: 'online'
-                    };
+                    this._userService.user = user;
                 }
             })
         );

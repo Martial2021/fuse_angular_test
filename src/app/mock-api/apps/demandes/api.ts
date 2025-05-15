@@ -4,18 +4,7 @@ import { cloneDeep } from 'lodash-es';
 
 @Injectable({ providedIn: 'root' })
 export class DemandesMockApi {
-    private _demandes: any[] = [
-        {
-            user_id: 'any-user-id',
-            content: 'Première demande mockée',
-            last_changed: new Date().toISOString()
-        },
-        {
-            user_id: 'any-user-id',
-            content: 'Deuxième demande mockée',
-            last_changed: new Date().toISOString()
-        }
-    ];
+    private _demandes: any[] = [];
 
     constructor(private _fuseMockApiService: FuseMockApiService) {
         this.registerHandlers();
