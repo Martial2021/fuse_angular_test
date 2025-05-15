@@ -1,0 +1,17 @@
+<!-- Connexion via Auth0 (remplace le formulaire) -->
+<div class="mt-8 space-y-6">
+    <p class="text-sm text-gray-600">
+        Pour accéder à l'application, cliquez sur le bouton ci-dessous pour vous connecter avec votre compte.
+        <br />
+        Si vous n'avez pas encore de compte, cliquez sur <strong>Sign up</strong> dans la page Auth0 qui s'affichera.
+    </p>
+
+    <button
+        class="fuse-mat-button-large w-full"
+        mat-flat-button
+        color="primary"
+        (click)="signInWithAuth0()"
+    >
+        Se connecter avec Auth0
+    </button>
+</div>

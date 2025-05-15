@@ -1,0 +1,21 @@
+<div class="p-8">
+    <h2 class="text-xl font-bold mb-4">Mes demandes</h2>
+
+    <div class="mb-4">
+        <input [(ngModel)]="content"
+               placeholder="Écrire une demande..."
+               class="border p-2 rounded w-full mb-2"/>
+        <button (click)="submit()" class="bg-blue-600 text-white px-4 py-2 rounded">
+            Ajouter
+        </button>
+    </div>
+
+    <ul class="space-y-3">
+        <li *ngFor="let d of demandes" class="p-4 border rounded shadow-sm">
+            <p class="mb-1">{{ d.content }}</p>
+            <small class="text-gray-500">Modifiée le {{ d.last_changed | date:'short' }}</small>
+        </li>
+    </ul>
+</div>
+
+
